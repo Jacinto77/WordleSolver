@@ -81,6 +81,18 @@ def get_choice():
     return int(input())
 
 
+def get_letter(letters):
+    input_letters = input("Input letter to include: \n")
+    for s in input_letters:
+        letters.append(s)
+
+    return letter
+
+
+def get_position():
+    return int(input("Input position of letter: \n"))
+
+
 # returns list of 5-letter words
 word_list = five_letter_words(remove_newline(fun.load_words(WORDLIST)))
 
@@ -92,24 +104,20 @@ rejected = []
 while True:
     choice = get_choice()
     if choice == 1:
-        letter = input("Input letter to include: \n")
-        letters.append(letter)
-        position = input("Input position of letter: \n")
-        word_list = letter_in_pos(letter, int(position), word_list)
+        word_list = letter_in_pos(get_letter(letters),
+                                  get_position(), word_list)
 
     if choice == 2:
-        letter = input("Input letter to include: \n")
-        letters.append(letter)
-        word_list = return_only_including_x(letter, word_list)
+        word_list = return_only_including_x(get_letter(letters), word_list)
 
     if choice == 3:
         letter = input("Input letter to exclude: \n")
         rejected.append(letter)
-        word_list = return_only_excluding_x(letter, word_list)
+        word_list = return_only_excluding_x(get_letter(letters), word_list)
 
     print_words(word_list)
 
     print("Number of words: " + str(len(word_list)))
-    print("Letters:\t", letters)
-    print("Rejected:\t", rejected)
+    print("Letters:\t", str(letters))
+    print("Rejected:\t", str(rejected))
     print("-------------------------------------")

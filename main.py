@@ -64,6 +64,7 @@ def print_words(wordlist):
     print()
 
 
+# modify to take string, and perform for each character
 def letter_in_pos(letter, position, wordlist):
     words = []
     for word in wordlist:
@@ -86,7 +87,7 @@ def get_letter(letters):
     for s in input_letters:
         letters.append(s)
 
-    return letter
+    return input_letters
 
 
 def get_position():

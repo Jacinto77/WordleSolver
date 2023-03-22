@@ -1,22 +1,30 @@
 import random
 import functions as fun
 
+# option 1:
+# get letter
+# determine if including or excluding
+# if including, need position?
+# if yes, get position
+# if no, skip
+# if excluding, add to rejected letters array
+# if including with position, add to included with position array as a pair (pos, char)
+# if including without position, add to included array
+
+# option 2:
+# take in string of characters on one line
+# tokenize it
+# syntax?
+#   -df dash excludes letters
+#   3f 2a 5k number preceding letter indicates position
+#   s d g   letter by itself indicates positionless letter
+
+
 WORDLIST = 'words_alpha.txt'
 
 
-# loads words into wordlist
-# def load_words():
-#     in_file = open(WORDLIST, 'r')
-#     line = in_file.readlines()
-#     wordlist = line
-#     print(' ', len(wordlist), " words loaded.")
-#     return wordlist
-
-
-# sample text to test credential store
-
-# not used currently
 def choose_word(wordlist):
+    """"""
     return random.choice(wordlist)
 
 
@@ -212,12 +220,3 @@ while True:
 
 
 
-# get letter
-# determine if including or excluding
-# if including, need position?
-# if yes, get position
-# if no, skip
-# if excluding, add to rejected letters array
-# if including with position, add to included with position array as a pair (pos, char)
-# if including without position, add to included array
-#

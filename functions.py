@@ -4,6 +4,3 @@ def load_words(WORDLIST):
     wordlist = line
     print(' ', len(wordlist), " words loaded.")
     return wordlist
-
-
-#more sample text for testing

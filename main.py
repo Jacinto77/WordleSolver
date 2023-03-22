@@ -58,6 +58,7 @@ def five_letter_words(wordlist):
 
 # TODO: Modify to allow entire string as input, syntax:
 #  argument 'af' -> returns all words that contain an 'a' and an 'f'
+# TODO: Currently non-functional, throws index exception when called
 def return_only_including_x(x, wordlist):
     """Returns wordlist containing all words including x."""
     words = []

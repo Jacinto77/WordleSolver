@@ -13,6 +13,8 @@ WORDLIST = 'words_alpha.txt'
 #     return wordlist
 
 
+# sample text to test credential store
+
 # not used currently
 def choose_word(wordlist):
     return random.choice(wordlist)

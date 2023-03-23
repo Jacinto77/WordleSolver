@@ -1,9 +1,10 @@
 import random
 import functions as fun
 
-# TODO: Implement option 2 for program execution
+
 # TODO: Incorporate OOP design ideas, move functions to relevant classes
-# TODO: Clean input file so it doesn't need to perform the initial sanitization on program start
+# TODO: Clean input file so it doesn't need to perform the initial sanitization
+#  on program start
 
 # option 1:
 # get letter
@@ -56,27 +57,24 @@ def five_letter_words(wordlist):
     return words
 
 
-# TODO: Modify to allow entire string as input, syntax:
-#  argument 'af' -> returns all words that contain an 'a' and an 'f'
-# TODO: Currently non-functional, throws index exception when called
-def return_only_including_x(x, wordlist):
+def return_only_including_letters(letters, wordlist):
     """Returns wordlist containing all words including x."""
     words = []
-    for word in wordlist:
-        if x in word:
-            words.append(word)
+    for letter in letters:
+        for word in wordlist:
+            if letter in word:
+                words.append(word)
 
     return words
 
 
-# TODO: Modify to allow entire string as input, syntax:
-#  argument '-af' -> returns all words that don't have an 'a' or 'f' in them
-def return_only_excluding_x(x, wordlist):
+def return_only_excluding_letters(letters, wordlist):
     """Returns wordlist containing all words excluding x."""
     words = []
-    for word in wordlist:
-        if x not in word:
-            words.append(word)
+    for letter in letters:
+        for word in wordlist:
+            if letter not in word:
+                words.append(word)
 
     return words
 
@@ -96,12 +94,16 @@ def print_words(wordlist):
     print()
 
 
-# TODO: Modify to take string input, syntax: 3a2f -> words containing an 'a' in the 3rd pos, f in 2nd, etc
-def letter_in_pos(letter, position, wordlist):
-    """Returns new wordlist including only those which match the letter and position."""
+def letter_in_pos(position, letter, wordlist):
+    """Returns new wordlist including only those which match the letter and position.
+
+    Arg position - string
+    Arg letter - string
+    Arg wordlist - list of strings
+    """
     words = []
     for word in wordlist:
-        if word[position - 1] == letter:
+        if word[int(position) - 1] == letter:
             words.append(word)
 
     return words
@@ -173,9 +175,40 @@ def get_letter():
     return input("Input a letter, then answer the prompts:\n>")
 
 
-def assign_position(positions, position, letters):
+def assign_position(position, letters, positions):
     """Assigns positional input characters to their corresponding position in list."""
-    positions[position - 1] = letters
+    positions[int(position) - 1] = letters
+
+
+def add_to_list(letters, list_letters):
+    for c in letters:
+        if c == '-':
+            continue
+        if c.isnumeric():
+            continue
+        if c in list_letters:
+            continue
+        list_letters.append(c)
+
+
+def filter_letters(letters, wordlist, list_letters, list_rejected, positions):
+    inputs = letters.split()
+    local_wordlist = wordlist
+    for elem in inputs:
+        if elem[0] == '-':
+            # print(elem[1:])
+            local_wordlist = return_only_excluding_letters(elem[1:], local_wordlist)
+            add_to_list(letters, list_rejected)
+        elif elem[0].isnumeric():
+            # print("Numeric ", elem)
+            local_wordlist = letter_in_pos(elem[0], elem[1], local_wordlist)
+            assign_position(elem[0], elem[1], positions)
+            add_to_list(elem, list_letters)
+        elif elem[0].isalpha():
+            # print("Alpha ", elem)
+            local_wordlist = return_only_including_letters(elem, local_wordlist)
+            add_to_list(elem, list_letters)
+    return local_wordlist
 
 
 # returns list of 5-letter words
@@ -189,35 +222,44 @@ list_letters = []
 list_rejected = []
 suggestions = []
 
+
+while True:
+    word_list = filter_letters(input("Input letters to filter: \n"
+                            "(Syntax: -af excludes words with 'a' and 'f'; "
+                            "2a includes only words with an 'a' in the 2nd position; "
+                            "'df' includes all words with both 'd' and 'f')\n>"),
+                               word_list, list_letters, list_rejected, positions)
+
+
 # still hate this control flow
 # would be better to type in a whole string of letters and parse
 # i.e., strings preceded by a '-' are fed into the omission filter
 # strings of multiple letters are fed into the inclusion filter
 # letters preceded by a number are positional indicators, fed into positional filter
-# TODO: Will certainly need updating after the OOP and new filter changes are implemented
-while True:
-    letters = get_letter()
-    print("Is this letter (1)included or (2)excluded?\n>")
-    choice = get_choice()
-    if choice == 1:
-        print("Is the letter (1)positional or (2)not?\n>")
-        choice = get_choice()
-        if choice == 1:
-            position = get_position()
-            word_list = letter_in_pos(
-                letters,
-                position,
-                word_list)
-            list_letters.append(letters)
-            assign_position(positions, position, letters)
 
-        if choice == 2:
-            word_list = return_only_including_x(letters, word_list)
-            list_letters.append(letters)
-
-    if choice == 2:
-        word_list = return_only_excluding_x(letters, word_list)
-        list_rejected.append(letters)
+# while True:
+#     letters = get_letter()
+#     print("Is this letter (1)included or (2)excluded?\n>")
+#     choice = get_choice()
+#     if choice == 1:
+#         print("Is the letter (1)positional or (2)not?\n>")
+#         choice = get_choice()
+#         if choice == 1:
+#             position = get_position()
+#             word_list = letter_in_pos(
+#                 letters,
+#                 position,
+#                 word_list)
+#             list_letters.append(letters)
+#             assign_position(positions, position, letters)
+#
+#         if choice == 2:
+#             word_list = return_only_including_x(letters, word_list)
+#             list_letters.append(letters)
+#
+#     if choice == 2:
+#         word_list = return_only_excluding_x(letters, word_list)
+#         list_rejected.append(letters)
 
     # choice = get_choice()
     # # test this option, currently exits with code 1

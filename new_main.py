@@ -14,5 +14,5 @@ while True:
     print(wordlist.positions)
     print("Letters:\t", str(wordlist.list_letters))
     print("Rejected:\t", str(wordlist.list_rejected))
-    wordlist.give_suggestions(wordlist.word_list)
+    wordlist.give_suggestions()
     print("-------------------------------------")

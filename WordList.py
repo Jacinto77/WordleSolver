@@ -18,10 +18,9 @@ class WordList:
     list_rejected = []
     suggestions = []
 
-    @staticmethod
-    def choose_word(wordlist):
+    def choose_word(self):
         """Returns random word from wordlist."""
-        return random.choice(wordlist)
+        return random.choice(self.word_list)
 
     def return_only_including_letters(self, letters):
         """Returns wordlist containing all words including x."""
@@ -31,7 +30,7 @@ class WordList:
                 if letter in word:
                     words.append(word)
 
-        return words
+        self.word_list = words
 
     def return_only_excluding_letters(self, letters):
         """Returns wordlist containing all words excluding x."""
@@ -41,7 +40,7 @@ class WordList:
                 if letter not in word:
                     words.append(word)
 
-        return words
+        self.word_list = words
 
     def print_words(self):
         """Prints all words in wordlist.
@@ -69,7 +68,7 @@ class WordList:
             if word[int(position) - 1] == letter:
                 words.append(word)
 
-        return words
+        self.word_list = words
 
     # NOT USED
     # def get_choice(self):
@@ -94,7 +93,7 @@ class WordList:
         word_suggestions = []
         number_of_suggestions = 5
         for i in range(number_of_suggestions):
-            temp = self.choose_word(self.word_list)
+            temp = self.choose_word()
             if temp not in word_suggestions:
                 word_suggestions.append(temp)
 
@@ -113,15 +112,15 @@ class WordList:
         """Assigns positional input characters to their corresponding position in list."""
         self.positions[int(position) - 1] = letters
 
-    def add_to_list(self, letters):
+    def add_to_list(self, letters, list_letters):
         for c in letters:
             if c == '-':
                 continue
             if c.isnumeric():
                 continue
-            if c in self.list_letters:
+            if c in list_letters:
                 continue
-            self.list_letters.append(c)
+            list_letters.append(c)
 
     def filter_letters(self, letters):
         inputs = letters.split()
@@ -129,15 +128,15 @@ class WordList:
         for elem in inputs:
             if elem[0] == '-':
                 # print(elem[1:])
-                local_wordlist = self.return_only_excluding_letters(elem[1:])
-                self.add_to_list(letters)
+                self.return_only_excluding_letters(elem[1:])
+                self.add_to_list(letters, self.list_rejected)
             elif elem[0].isnumeric():
                 # print("Numeric ", elem)
-                local_wordlist = self.letter_in_pos(elem[0], elem[1])
+                self.letter_in_pos(elem[0], elem[1])
                 self.assign_position(elem[0], elem[1])
-                self.add_to_list(elem)
+                self.add_to_list(elem, self.list_letters)
             elif elem[0].isalpha():
                 # print("Alpha ", elem)
-                local_wordlist = self.return_only_including_letters(elem)
-                self.add_to_list(elem)
-        self.word_list = local_wordlist
+                self.return_only_including_letters(elem)
+                self.add_to_list(elem, self.list_letters)
+

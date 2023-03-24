@@ -22,6 +22,7 @@ class WordList:
         """Returns random word from wordlist."""
         return random.choice(self.word_list)
 
+    # TODO: not allowing multiple character input
     def return_only_including_letters(self, letters):
         """Returns wordlist containing all words including x."""
         words = []
@@ -29,9 +30,9 @@ class WordList:
             for word in self.word_list:
                 if letter in word:
                     words.append(word)
+            self.word_list = words
 
-        self.word_list = words
-
+    # TODO: not allowing multiple character input
     def return_only_excluding_letters(self, letters):
         """Returns wordlist containing all words excluding x."""
         words = []
@@ -39,8 +40,7 @@ class WordList:
             for word in self.word_list:
                 if letter not in word:
                     words.append(word)
-
-        self.word_list = words
+            self.word_list = words
 
     def print_words(self):
         """Prints all words in wordlist.
@@ -129,7 +129,7 @@ class WordList:
             if elem[0] == '-':
                 # print(elem[1:])
                 self.return_only_excluding_letters(elem[1:])
-                self.add_to_list(letters, self.list_rejected)
+                self.add_to_list(elem, self.list_rejected)
             elif elem[0].isnumeric():
                 # print("Numeric ", elem)
                 self.letter_in_pos(elem[0], elem[1])

@@ -20,27 +20,46 @@ class WordList:
 
     def choose_word(self):
         """Returns random word from wordlist."""
+        if not self.word_list:
+            return None
         return random.choice(self.word_list)
 
     # TODO: not allowing multiple character input
-    def return_only_including_letters(self, letters):
+    def return_only_including_letters(self, letters, word_list):
         """Returns wordlist containing all words including x."""
-        words = []
-        for letter in letters:
-            for word in self.word_list:
-                if letter in word:
-                    words.append(word)
-            self.word_list = words
+        if not letters:
+            return word_list
+
+        new_words = []
+
+        for word in word_list:
+            if letters[0] in word:
+                new_words.append(word)
+
+        return self.return_only_including_letters(letters[1:], new_words)
 
     # TODO: not allowing multiple character input
-    def return_only_excluding_letters(self, letters):
+    # def return_only_excluding_letters(self, letters):
+    #     """Returns wordlist containing all words excluding x."""
+    #     words = []
+    #     for letter in letters:
+    #         for word in self.word_list:
+    #             if letter not in word:
+    #                 words.append(word)
+    #     self.word_list = words
+
+    def return_only_excluding_letters(self, letters, word_list):
         """Returns wordlist containing all words excluding x."""
-        words = []
-        for letter in letters:
-            for word in self.word_list:
-                if letter not in word:
-                    words.append(word)
-            self.word_list = words
+        if not letters:
+            return word_list
+
+        new_words = []
+
+        for word in word_list:
+            if letters[0] not in word:
+                new_words.append(word)
+
+        return self.return_only_excluding_letters(letters[1:], new_words)
 
     def print_words(self):
         """Prints all words in wordlist.
@@ -56,7 +75,7 @@ class WordList:
                 print()
         print()
 
-    def letter_in_pos(self, position, letter):
+    def letter_in_pos(self, position, letter, wordlist):
         """Returns new wordlist including only those which match the letter and position.
 
         Arg position - string
@@ -64,11 +83,11 @@ class WordList:
         Arg wordlist - list of strings
         """
         words = []
-        for word in self.word_list:
+        for word in wordlist:
             if word[int(position) - 1] == letter:
                 words.append(word)
 
-        self.word_list = words
+        return words
 
     # NOT USED
     # def get_choice(self):
@@ -94,6 +113,9 @@ class WordList:
         number_of_suggestions = 5
         for i in range(number_of_suggestions):
             temp = self.choose_word()
+            if not temp:
+                print("Suggestions: No words left")
+                return
             if temp not in word_suggestions:
                 word_suggestions.append(temp)
 
@@ -122,21 +144,27 @@ class WordList:
                 continue
             list_letters.append(c)
 
-    def filter_letters(self, letters):
-        inputs = letters.split()
-        local_wordlist = self.word_list
-        for elem in inputs:
-            if elem[0] == '-':
-                # print(elem[1:])
-                self.return_only_excluding_letters(elem[1:])
-                self.add_to_list(elem, self.list_rejected)
-            elif elem[0].isnumeric():
-                # print("Numeric ", elem)
-                self.letter_in_pos(elem[0], elem[1])
-                self.assign_position(elem[0], elem[1])
-                self.add_to_list(elem, self.list_letters)
-            elif elem[0].isalpha():
-                # print("Alpha ", elem)
-                self.return_only_including_letters(elem)
-                self.add_to_list(elem, self.list_letters)
+    def filter_letters(self, letters, wordlist):
+        """Filters wordlist for the input letters.
 
+        Sample Input: '-af 2b gs'
+        Expected output: an updated wordlist containing only words that do
+        not contain 'a' or 'f', has a 'b' in the 2nd position, and contains
+        the letters 'g' and 's'.
+
+        Input: string letters
+        Output: alters instance wordlist"""
+        for element in letters.split():
+            if element[0] == '-':
+                # print(element[1:])
+                self.add_to_list(element, self.list_rejected)
+                self.word_list = self.return_only_excluding_letters(element[1:], wordlist)
+            elif element[0].isnumeric():
+                # print("Numeric ", element)
+                self.assign_position(element[0], element[1])
+                self.add_to_list(element, self.list_letters)
+                self.word_list = self.letter_in_pos(element[0], element[1], wordlist)
+            elif element[0].isalpha():
+                # print("Alpha ", element)
+                self.add_to_list(element, self.list_letters)
+                self.word_list = self.return_only_including_letters(element, wordlist)

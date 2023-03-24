@@ -1,3 +1,6 @@
+import functions as fun
+
+
 def exclude_letters(letters, wordlist):
     pass
 
@@ -69,18 +72,76 @@ def include_letters_pos(letters, wordlist):
 #             return exclusions
 
 
-def split_input(letters, wordlist):
-    inputs = letters.split()
-    for elem in inputs:
-        if elem[0] == '-':
-            print(elem[1:])
-        elif elem[0].isnumeric():
-            print("Numeric ", elem)
-        elif elem[0].isalpha():
-            print("Alpha ", elem)
+# def split_input(letters, wordlist):
+#     inputs = letters.split()
+#     for elem in inputs:
+#         if elem[0] == '-':
+#             print(elem[1:])
+#         elif elem[0].isnumeric():
+#             print("Numeric ", elem)
+#         elif elem[0].isalpha():
+#             print("Alpha ", elem)
+#
+#
+# fake_wordlist = ""
+# sample_input = "-sd ab 2f 4g"
+#
+# split_input(sample_input, fake_wordlist)
 
 
-fake_wordlist = ""
-sample_input = "-sd ab 2f 4g"
+def return_only_including_letters(letters, word_list):
+    """Returns wordlist containing all words including x."""
+    words = []
+    for letter in letters:
+        for word in word_list:
+            if letter in word:
+                words.append(word)
+    return words
 
-split_input(sample_input, fake_wordlist)
+
+def return_only_excluding_letters(letters, word_list):
+    """Returns wordlist containing all words excluding x."""
+    if letters == "":
+        return word_list
+    temp_words = word_list
+    new_words = []
+
+    for word in temp_words:
+        if letters[0] not in word:
+            new_words.append(word)
+
+    return return_only_excluding_letters(letters[1:], new_words)
+
+    # for letter in letters:
+    #     for word in temp_words:
+    #         if letter not in word:
+    #             new_words.append(word)
+    #     new_letters = letters[1:]
+    #     new_words = return_only_excluding_letters(new_letters, new_words)
+    #
+    # return new_words
+
+
+def recursive_substrings(string):
+    if string == "":
+        return
+    print(string)
+    recursive_substrings(string[1:])
+
+
+word_list = fun.remove_newline(
+        fun.load_words("new_words_alpha.txt"))
+
+# sample_word = "gab"
+# recursive_substrings(sample_word)
+
+new_words = return_only_excluding_letters("ga", word_list)
+print(new_words)
+
+# s = "ga -f 3b 2l"
+# print(s.split())
+#
+# for elem in s.split():
+#     print(elem)
+#     print(elem[0])
+

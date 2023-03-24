@@ -18,13 +18,14 @@ class WordList:
     list_rejected = []
     suggestions = []
 
+    # TODO: Test
     def choose_word(self):
         """Returns random word from wordlist."""
         if not self.word_list:
             return None
         return random.choice(self.word_list)
 
-    # TODO: not allowing multiple character input
+    # TODO: Test
     def return_only_including_letters(self, letters, word_list):
         """Returns wordlist containing all words including x."""
         if not letters:
@@ -38,16 +39,7 @@ class WordList:
 
         return self.return_only_including_letters(letters[1:], new_words)
 
-    # TODO: not allowing multiple character input
-    # def return_only_excluding_letters(self, letters):
-    #     """Returns wordlist containing all words excluding x."""
-    #     words = []
-    #     for letter in letters:
-    #         for word in self.word_list:
-    #             if letter not in word:
-    #                 words.append(word)
-    #     self.word_list = words
-
+    # TODO: Test
     def return_only_excluding_letters(self, letters, word_list):
         """Returns wordlist containing all words excluding x."""
         if not letters:
@@ -61,6 +53,7 @@ class WordList:
 
         return self.return_only_excluding_letters(letters[1:], new_words)
 
+    # TODO: Test
     def print_words(self):
         """Prints all words in wordlist.
 
@@ -75,6 +68,7 @@ class WordList:
                 print()
         print()
 
+    # TODO: Test
     def letter_in_pos(self, position, letter, wordlist):
         """Returns new wordlist including only those which match the letter and position.
 
@@ -89,20 +83,7 @@ class WordList:
 
         return words
 
-    # NOT USED
-    # def get_choice(self):
-    #     """Gets user input to determine control flow of program."""
-    #     # print("1: Letter and position")
-    #     # print("2: Letter")
-    #     # print("3: Exclude letter")
-    #
-    #     return int(input())
-
-    # NOT USED
-    # def get_position(self):
-    #     """Gets user input to determine position of a letter."""
-    #     return int(input("Input position of letter: \n"))
-
+    # TODO: Test
     def give_suggestions(self):
         """Prints a number of suggested words to try.
 
@@ -125,15 +106,12 @@ class WordList:
 
         print()
 
-    # NOT USED
-    # def get_letter(self):
-    #     """Gets letter input from user."""
-    #     return input("Input a letter, then answer the prompts:\n>")
-
+    # TODO: Test
     def assign_position(self, position, letters):
         """Assigns positional input characters to their corresponding position in list."""
         self.positions[int(position) - 1] = letters
 
+    # TODO: Test
     def add_to_list(self, letters, list_letters):
         for c in letters:
             if c == '-':
@@ -144,6 +122,7 @@ class WordList:
                 continue
             list_letters.append(c)
 
+    # TODO: Test
     def filter_letters(self, letters, wordlist):
         """Filters wordlist for the input letters.
 

@@ -1,6 +1,6 @@
 import random
 import functions as fun
-
+from WordList import WordList
 
 # TODO: Incorporate OOP design ideas, move functions to relevant classes
 # TODO: Clean input file so it doesn't need to perform the initial sanitization
@@ -24,37 +24,33 @@ import functions as fun
 #   3f 2a 5k number preceding letter indicates position
 #   s d g   letter by itself indicates position-less letter
 
-
-WORDLIST = 'words_alpha.txt'
-
-
 def choose_word(wordlist):
     """Returns random word from wordlist."""
     return random.choice(wordlist)
 
-
-# removes newlines from returned wordlist
-def remove_newline(wordlist):
-    """Removes newlines from wordlist:
-
-    Needed because of my non-understanding of my parsing
-    code. Will alter other functions so that
-    this one is unneeded."""
-    words = []
-    for word in wordlist:
-        word = word[:-1]
-        words.append(word)
-    return words
-
-
-# returns only 5-letter words
-def five_letter_words(wordlist):
-    """Parse wordlist for only words of exactly 5 characters."""
-    words = []
-    for word in wordlist:
-        if len(word) == 5:
-            words.append(word)
-    return words
+# Moved to functions.py
+# # removes newlines from returned wordlist
+# def remove_newline(wordlist):
+#     """Removes newlines from wordlist:
+#
+#     Needed because of my non-understanding of my parsing
+#     code. Will alter other functions so that
+#     this one is unneeded."""
+#     words = []
+#     for word in wordlist:
+#         word = word[:-1]
+#         words.append(word)
+#     return words
+#
+#
+# # returns only 5-letter words
+# def five_letter_words(wordlist):
+#     """Parse wordlist for only words of exactly 5 characters."""
+#     words = []
+#     for word in wordlist:
+#         if len(word) == 5:
+#             words.append(word)
+#     return words
 
 
 def return_only_including_letters(letters, wordlist):
@@ -211,8 +207,18 @@ def filter_letters(letters, wordlist, list_letters, list_rejected, positions):
     return local_wordlist
 
 
+wordlist = WordList('new_words_alpha.txt', 5)
+
+
+wordlist_file = 'new_words_alpha.txt'
+
+# length of words to use
+# Wordle uses 5-letter words
+length = 5
+
 # returns list of 5-letter words
-word_list = five_letter_words(remove_newline(fun.load_words(WORDLIST)))
+word_list = fun.remove_newline(
+        fun.load_words(wordlist_file))
 
 print(word_list)
 
@@ -224,12 +230,12 @@ suggestions = []
 
 
 while True:
-    word_list = filter_letters(input("Input letters to filter: \n"
-                            "(Syntax: -af excludes words with 'a' and 'f'; "
-                            "2a includes only words with an 'a' in the 2nd position; "
-                            "'df' includes all words with both 'd' and 'f')\n>"),
-                               word_list, list_letters, list_rejected, positions)
-
+    word_list = filter_letters(
+        input("Input letters to filter: \n"
+              "(Syntax: -af excludes words with 'a' and 'f'; "
+              "2a includes only words with an 'a' in the 2nd position; "
+              "'df' includes all words with both 'd' and 'f')\n>"),
+        word_list, list_letters, list_rejected, positions)
 
 # still hate this control flow
 # would be better to type in a whole string of letters and parse

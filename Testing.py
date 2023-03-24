@@ -129,14 +129,29 @@ def recursive_substrings(string):
     recursive_substrings(string[1:])
 
 
+def letter_in_pos(position, letter, wordlist):
+    """Returns new wordlist including only those which match the letter and position.
+
+        Arg position - string
+        Arg letter - string
+        Arg wordlist - list of strings
+        """
+    words = []
+    for word in wordlist:
+        if word[int(position) - 1] == letter:
+            words.append(word)
+
+    return words
+
+
 word_list = fun.remove_newline(
         fun.load_words("new_words_alpha.txt"))
 
 # sample_word = "gab"
 # recursive_substrings(sample_word)
 
-new_words = return_only_excluding_letters("ga", word_list)
-print(new_words)
+# new_words = return_only_excluding_letters("ga", word_list)
+# print(new_words)
 
 # s = "ga -f 3b 2l"
 # print(s.split())
@@ -145,3 +160,12 @@ print(new_words)
 #     print(elem)
 #     print(elem[0])
 
+string = "-z 2b f"
+
+# new_list = letter_in_pos('2', 'b', word_list)
+new_list = []
+for element in string.split():
+    if element[0].isnumeric():
+        new_list = letter_in_pos(element[0], element[1], word_list)
+
+print(new_list)

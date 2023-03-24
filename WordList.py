@@ -68,7 +68,7 @@ class WordList:
                 print()
         print()
 
-    # TODO: Test
+    # TODO: Still not accepted when grouped with other input
     def letter_in_pos(self, position, letter, wordlist):
         """Returns new wordlist including only those which match the letter and position.
 
@@ -123,6 +123,7 @@ class WordList:
             list_letters.append(c)
 
     # TODO: Test
+    # TODO: numeric positioning still not working
     def filter_letters(self, letters, wordlist):
         """Filters wordlist for the input letters.
 
@@ -138,12 +139,15 @@ class WordList:
                 # print(element[1:])
                 self.add_to_list(element, self.list_rejected)
                 self.word_list = self.return_only_excluding_letters(element[1:], wordlist)
+                continue
             elif element[0].isnumeric():
                 # print("Numeric ", element)
                 self.assign_position(element[0], element[1])
                 self.add_to_list(element, self.list_letters)
                 self.word_list = self.letter_in_pos(element[0], element[1], wordlist)
+                continue
             elif element[0].isalpha():
                 # print("Alpha ", element)
                 self.add_to_list(element, self.list_letters)
                 self.word_list = self.return_only_including_letters(element, wordlist)
+                continue

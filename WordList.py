@@ -133,21 +133,36 @@ class WordList:
         the letters 'g' and 's'.
 
         Input: string letters
-        Output: alters instance wordlist"""
+        Output: alters instance member self.word_list"""
         for element in letters.split():
             if element[0] == '-':
                 # print(element[1:])
                 self.add_to_list(element, self.list_rejected)
                 self.word_list = self.return_only_excluding_letters(element[1:], wordlist)
+
                 continue
+
             elif element[0].isnumeric():
                 # print("Numeric ", element)
                 self.assign_position(element[0], element[1])
                 self.add_to_list(element, self.list_letters)
                 self.word_list = self.letter_in_pos(element[0], element[1], wordlist)
+
                 continue
+
             elif element[0].isalpha():
                 # print("Alpha ", element)
                 self.add_to_list(element, self.list_letters)
                 self.word_list = self.return_only_including_letters(element, wordlist)
+
                 continue
+
+    def print_stats(self):
+        self.print_words()
+
+        print("Number of words: " + str(len(self.word_list)))
+        print(self.positions)
+        print("Letters:\t", str(self.list_letters))
+        print("Rejected:\t", str(self.list_rejected))
+        self.give_suggestions()
+        print("-------------------------------------")

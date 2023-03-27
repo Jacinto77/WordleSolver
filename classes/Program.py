@@ -1,6 +1,12 @@
+from classes.WordList import WordList
+
+
 class Program:
     def __init__(self):
-        pass
+        self.initial_wordlist = WordList('wordlists/new_words_alpha.txt', 5)
+        self.working_wordlist = self.initial_wordlist
+
+    will_continue = True
 
     @staticmethod
     def print_help_text():
@@ -9,13 +15,12 @@ class Program:
               "'df' includes all words with both 'd' and 'f')")
 
     # TODO: Implement restart logic
-    def is_command(self, letters):
+    def is_command(self, letters, ):
         if letters == "\\help":
             self.print_help_text()
             return False
         elif letters == "\\r":
-            # pass
-            # needs function call here
+            self.restart_state()
             return False
         elif letters == "\\q":
             quit(0)
@@ -44,3 +49,13 @@ class Program:
                 return letters
             else:
                 continue
+
+    # TODO: fix this dogshit code
+    def restart_game(self):
+        self.working_wordlist.word_list = self.initial_wordlist.word_list
+        self.working_wordlist.list_letters = []
+        self.working_wordlist.list_rejected = []
+        self.working_wordlist.positions = ['_', '_', '_', '_', '_']
+
+    def restart_state(self):
+        self.will_continue = False

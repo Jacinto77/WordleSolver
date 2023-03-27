@@ -150,7 +150,7 @@ class WordList:
 
                 continue
 
-            elif element[0].isalpha():
+            else:
                 # print("Alpha ", element)
                 self.add_to_list(element, self.list_letters)
                 self.word_list = self.return_only_including_letters(element, wordlist)

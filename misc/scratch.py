@@ -143,9 +143,9 @@ def letter_in_pos(position, letter, wordlist):
 
     return words
 
-
-word_list = fun.remove_newline(
-        fun.load_words("new_words_alpha.txt"))
+#
+# word_list = fun.remove_newline(
+#         fun.load_words("new_words_alpha.txt"))
 
 # sample_word = "gab"
 # recursive_substrings(sample_word)
@@ -160,12 +160,39 @@ word_list = fun.remove_newline(
 #     print(elem)
 #     print(elem[0])
 
-string = "-z 2b f"
+# string = "-z 2b f"
+#
+# # new_list = letter_in_pos('2', 'b', word_list)
+# new_list = []
+# for element in string.split():
+#     if element[0].isnumeric():
+#         new_list = letter_in_pos(element[0], element[1], word_list)
+#
+# print(new_list)
 
-# new_list = letter_in_pos('2', 'b', word_list)
-new_list = []
-for element in string.split():
-    if element[0].isnumeric():
-        new_list = letter_in_pos(element[0], element[1], word_list)
+import uuid
 
-print(new_list)
+
+class Test:
+    def __init__(self, obj_id=None):
+        self.obj_id = str(uuid.uuid4().hex)
+
+
+list_of_ids = []
+
+for i in range(10000):
+    newID = Test()
+    print(newID.obj_id)
+    if newID.obj_id in list_of_ids:
+        print("Duplicate ID")
+        break
+    else:
+        list_of_ids.append(newID.obj_id)
+        print(newID.obj_id)
+
+
+# initial_test = Test()
+# print(initial_test.obj_id)
+#
+# new_test = Test()
+# print(new_test.obj_id)

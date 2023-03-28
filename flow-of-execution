@@ -1,0 +1,13 @@
+In Main.py
+
+    Create Program obj program with default values
+        program.wordlist = initial wordlist
+        program.will_continue = True
+
+    While program.will_continue == True
+        print words in wordlist
+        print stats about wordlist
+
+        get input from user via program.initial_prompt()
+        If program.will_continue == False
+            break out of loop

@@ -1,18 +1,22 @@
-import uuid
-import os
-import glob
-import pickle
+import uuid     # generate unique ID between instances of WordList
+import os       # used for directory/file management
+import glob     # used with os to create and remove files based on pattern matching
+import pickle   # object state output to files for savings and loading states
 from classes.WordList import WordList
 
 
 class Program:
-
+    # program commands to be called at runtime
     help_codes = ["\\help", "\\h"]
     restart_codes = ["\\restart", "\\r"]
     quit_codes = ["\\quit", "\\q"]
     revert_codes = ["\\back", "\\b"]
 
     def __init__(self, wordlist_file=None):
+        # TODO: Does including the instantiation of WordList in the
+        #   constructor of Program break encapsulation? Could they be separated
+        #   while maintaining functionality to produce cleaner and more readable
+        #   code?
         if wordlist_file is None:
             self.wordlist = WordList(None, None, None, None,
                                      'wordlists/new_words_alpha.txt')
@@ -24,9 +28,12 @@ class Program:
         self.commands = self.help_codes + self.restart_codes + \
                         self.quit_codes + self.revert_codes
 
+        # list of states saved
         self.program_state_list = []
+        # clears ~/states/ directory on startup
         self.clear_states_dir()
-        # self.save_state()
+
+        self.is_saved = False
 
     @staticmethod
     def clear_states_dir():
@@ -91,6 +98,7 @@ class Program:
             return True
 
     # TODO: add logic to not save state if no changes are made
+    # TODO: should save_state and load_state be methods of WordList instead?
     def save_state(self):
         new_state = self.wordlist
         with open(f'states/program_state_{new_state.obj_id}', 'wb') as f:
@@ -100,6 +108,18 @@ class Program:
         self.wordlist.obj_id = uuid.uuid4().hex
 
     def load_state(self, steps_back):
+        """Loads a previous state of the current program.
+
+        Precondition: self.program_state_list is initialized and contains at
+        least one saved state. user provides an integer value specifying how many
+        saves back they want to revert to.
+        Postcondition: the specified save state is loaded to the current Program
+        instance. self.program_state_list is cleared of all states "ahead of" the
+        loaded state.
+
+        Keyword arguments:
+        steps_back -- an integer value input by the user"""
+
         if int(steps_back) > len(self.program_state_list):
             print("Cant load beyond the original state")
             print("Loading initial state...")
@@ -117,7 +137,14 @@ class Program:
                 os.remove(file_to_delete)
             except IndexError:
                 print("IndexError: pop from empty list")
+            except FileNotFoundError:   # TODO: Off by one error?
+                print("FileNotFoundError: can't find specified file provided"
+                      "by self.program_state_list.pop()")
 
     def print_state(self):
+        """Prints the title of each saved state to a newline
+
+        Precondition: self.program_state_list has at least one element
+        Postcondition: each state is printed to console"""
         for state in self.program_state_list:
             print(state)

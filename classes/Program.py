@@ -12,7 +12,6 @@ class Program:
     quit_codes = ["\\quit", "\\q"]
     revert_codes = ["\\back", "\\b"]
 
-    # TODO: re-examine this constructor
     def __init__(self, wordlist_file=None):
         if wordlist_file is None:
             self.wordlist = WordList(None, None, None, None,
@@ -100,8 +99,6 @@ class Program:
         self.program_state_list.append(f'states/program_state_{new_state.obj_id}')
         self.wordlist.obj_id = uuid.uuid4().hex
 
-    # TODO: document and clean
-    # TODO: test and verify logic
     def load_state(self, steps_back):
         if int(steps_back) > len(self.program_state_list):
             print("Cant load beyond the original state")
@@ -120,14 +117,6 @@ class Program:
                 os.remove(file_to_delete)
             except IndexError:
                 print("IndexError: pop from empty list")
-
-    # def restart_state(self):
-    #     self.will_continue = False
-    #
-    # def save_state(self):
-    #     new_save = WordList(self.wordlist.positions, self.wordlist.list_letters,
-    #                         self.wordlist.list_rejected, self.wordlist.word_list, None)
-    #     self.program_state.append(new_save)
 
     def print_state(self):
         for state in self.program_state_list:

@@ -38,8 +38,6 @@ class WordList:
 
         self.obj_id = str(uuid.uuid4().hex)
 
-    # TODO: Test
-    # TODO: numeric positioning still not working
     def filter_letters(self, letters):
         """Filters wordlist for the input letters.
 
@@ -72,7 +70,6 @@ class WordList:
 
                 continue
 
-    # TODO: Still not accepted when grouped with other input
     def letter_in_pos(self, position, letter):
         """Returns new wordlist including only those which match the letter and position.
 
@@ -87,7 +84,9 @@ class WordList:
 
         return words
 
-    # TODO: Test
+    # TODO: Can be made more specific by also specifying the position the letter
+    #   was in. ie if the letter Y was yellow in position 5, we can return
+    #   only words with a Y in it, but NOT in the Y position
     def return_only_including_letters(self, letters):
         """Returns wordlist containing all words including x."""
         if not letters:
@@ -102,7 +101,6 @@ class WordList:
         self.word_list = new_words
         return self.return_only_including_letters(letters[1:])
 
-    # TODO: Test
     def return_only_excluding_letters(self, letters):
         """Returns wordlist containing all words excluding x."""
         if not letters:
@@ -124,7 +122,6 @@ class WordList:
         # just be more specific
         pass
 
-    # TODO: Test
     def print_words(self):
         """Prints all words in wordlist.
 
@@ -139,7 +136,6 @@ class WordList:
                 print()
         print()
 
-    # TODO: Test
     def give_suggestions(self):
         """Prints a number of suggested words to try.
 
@@ -162,19 +158,16 @@ class WordList:
 
         print()
 
-        # TODO: Test
     def choose_word(self):
         """Returns random word from wordlist."""
         if not self.word_list:
             return None
         return random.choice(self.word_list)
 
-    # TODO: Test
     def assign_position(self, position, letters):
         """Assigns positional input characters to their corresponding position in list."""
         self.positions[int(position) - 1] = letters
 
-    # TODO: Test
     def add_to_rejected_list(self, letters):
         for c in letters:
             if c == '-':

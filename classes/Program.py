@@ -7,7 +7,8 @@ from classes.WordList import WordList
 
 class Program:
     # program commands to be called at runtime
-    help_codes = ["\\help", "\\h"]
+    help_codes = ["\\help"]
+    quick_help_codes = ["\\h"]
     restart_codes = ["\\restart", "\\r"]
     quit_codes = ["\\quit", "\\q"]
     revert_codes = ["\\back", "\\b"]
@@ -26,7 +27,7 @@ class Program:
         self.will_continue = True
 
         self.commands = self.help_codes + self.restart_codes + \
-                        self.quit_codes + self.revert_codes
+                        self.quit_codes + self.revert_codes + self.quick_help_codes
 
         # list of states saved
         self.program_state_list = []
@@ -37,7 +38,10 @@ class Program:
 
     @staticmethod
     def clear_states_dir():
-        """Deletes all state files from ~/states/."""
+        """Deletes all state files from ~/states/.
+
+        Precondition: $PROJECTDIR/states/ directory exists
+        Postcondition: states/ is empty"""
         files = glob.glob('states/program_state_*')
         for f in files:
             os.remove(f)
@@ -45,14 +49,22 @@ class Program:
     def initial_prompt(self):
         """Prompts for input from user.
 
-        Calls methods to run program commands,
-        Validates input"""
+        Calls methods to run program commands, validates input
+        Precondition: None
+        Postcondition: Letters input from user are assigned to variable to be
+        used by later filtering functions
+        Postcondition_2: program system commands are ran, user is re-prompted for
+        input"""
 
         while True:
             letters = input("Input letters to filter: \n"
-                            "\\help for instructions\n"
+                            "\\help for detailed instructions\n"
+                            "\\h for quick help\n"
+                            "\\b to go back to a previous state\n"
                             "\\r to restart\n"
-                            "\\q to quit\n>")
+                            "\\q to quit\n"
+                            "-------------------------------------\n"
+                            ">")
             if self.is_command(letters):
                 self.run_command(letters)
                 return self.initial_prompt()
@@ -65,6 +77,10 @@ class Program:
     def is_command(self, letters):
         """Returns a boolean for if the input letters are a built-in command.
 
+        Precondition: letters variables holds some input from the user
+        Postcondition: returns boolean to caller signifying whether the variable
+        letters is a valid command
+
         Keyword arguments:
         letters -- string of characters input by user"""
         if letters in self.commands:
@@ -75,11 +91,17 @@ class Program:
     def run_command(self, letters):
         """Uses letters input from user to call the specified command.
 
+        Precondition: letters is storing some input of characters from the user
+        Postcondition: command specified in letters is called, or error message
+        printed to console
+
         Keyword arguments:
         letters -- string of characters input by user"""
         # prints help text
         if letters in self.help_codes:
             self.print_help_text()
+        elif letters in self.quick_help_codes:
+            self.print_quick_help()
         # reverts program to previous state
         elif letters in self.revert_codes:
             print("How many steps back do you want to take?")
@@ -100,9 +122,38 @@ class Program:
     @staticmethod
     def print_help_text():
         """Prints help text."""
-        print("(Syntax: -af excludes words with 'a' and 'f'; "
-              "2a includes only words with an 'a' in the 2nd position; "
-              "'df' includes all words with both 'd' and 'f')")
+        print("In Wordle you will attempt to guess a 5-letter word.\n"
+              "Upon entering your first guess, letters will be highlighted\n"
+              "as Green, Yellow, or Dark Grey/Black. Green means that the letter\n"
+              "is in the correct position. Yellow signifies that the letter is in\n"
+              "the word, but currently in the wrong position. Black is used to \n"
+              "tell the user that the word does not contain that letter at all.\n"
+              "\n"
+              "To tell the program that a letter is green, you will enter the \n"
+              "position in the word, and the letter. So, if the guess is MAKES, \n"
+              "and M is lit up green, you would enter '1m' to signify that the word\n"
+              "has an 'm' in the first position. \n"
+              "To tell the program that the letter is yellow, you would follow similar\n"
+              "syntax to the above, but it is prepended with a '+'. For example,\n"
+              "if the guess is MAKES and the 'm' is colored yellow, you would enter\n"
+              "'+1m' and it would filter the wordlist to find all words with an \n"
+              "'m' in it, but NOT in the 1st position.\n"
+              "Finally, for letters colored grey/black, prepend the letter with\n"
+              "a '-'. For example, '-a' would return all words that do not have an\n"
+              "'a' in it.\n"
+              "Note: you may combine inputs on one line: ex. -a 2b +3c\n"
+              "\n"
+              "Quick reference: \n"
+              "-af excludes words with 'a' and 'f' \n"
+              "2a includes only words with an 'a' in the 2nd position \n"
+              "+2a includes only words with 'a' NOT in the 2nd position\n")
+
+    @staticmethod
+    def print_quick_help():
+        """Prints to the console a shorter and less detailed help text."""
+        print("-af excludes words with 'a' and 'f' \n"
+              "2a includes only words with an 'a' in the 2nd position \n"
+              "+2a includes only words with 'a' NOT in the 2nd position\n")
 
     @staticmethod
     def is_good_input(letters):
@@ -120,7 +171,7 @@ class Program:
     # TODO: add logic to not save state if no changes are made
     # TODO: should save_state and load_state be methods of WordList instead?
     def save_state(self):
-        """Saves state of the program to binary file in ../states"""
+        """Saves state of the program to binary file in $PROJECTDIR/states"""
         new_state = self.wordlist
         with open(f'states/program_state_{new_state.obj_id}', 'wb') as f:
             pickle.dump(new_state, f, pickle.HIGHEST_PROTOCOL)

@@ -2,6 +2,9 @@ from misc import functions as fun
 import random
 import uuid
 
+# TODO: Clean all input prior to going to filtering functions, strive for each
+#   function to only handle one task, refactor as needed
+
 
 class WordList:
     def __init__(self,
@@ -48,18 +51,23 @@ class WordList:
         Input: string letters
         Output: alters instance member self.word_list"""
         for element in letters.split():
-            if element[0] == '-':
+            if element[0] == '-':           # exclude letters
                 self.add_to_rejected_list(element)
                 self.word_list = self.return_only_excluding_letters(element[1:])
                 continue
 
-            elif element[0].isnumeric():
+            elif element[0].isnumeric():    # include letters in position
                 self.assign_position(element[0], element[1])
                 self.add_to_included_list(element)
                 self.word_list = self.letter_in_pos(element[0], element[1])
                 continue
 
-            else:
+            elif element[0] == '+':         # exclude letters in position
+                self.add_to_included_list(element)
+                self.word_list = self.exclude_positional_letter(element[1], element[2])
+                continue
+
+            else:                           # include letters non-positionally
                 self.add_to_included_list(element)
                 self.word_list = self.return_only_including_letters(element)
                 continue
@@ -67,10 +75,9 @@ class WordList:
     def letter_in_pos(self, position, letter):
         """Returns new wordlist including only those which match the letter and position.
 
-        Arg position - string
-        Arg letter - string
-        Arg wordlist - list of strings
-        """
+        Keyword arguments:
+        position -- int as str denoting position in the word the letter should be in
+        letter -- char to match in position"""
         words = []
         for word in self.word_list:
             if word[int(position) - 1] == letter:
@@ -112,11 +119,25 @@ class WordList:
         return self.return_only_excluding_letters(letters[1:])
 
     # TODO: implement
-    def exclude_positional_letter(self):
+    def exclude_positional_letter(self, position, letters):
+        """Alters the wordlist to only have words that contains the 'letter(s)'
+        provided NOT in the 'position' provided
+
+        Keyword arguments:
+        position -- int as str that denotes where the letter should NOT be
+        letters -- chars to filter
+        """
+
         # to be used when a letter is in the word, but in the wrong spot
         # could replace the return_only_including_x() method as it would
         # just be more specific
-        pass
+        words = []
+        for word in self.word_list:
+            # letter must not be in position and letter must be in word
+            if (word[int(position) - 1] != letters) and (letters in word):
+                words.append(word)
+
+        return words
 
     def print_words(self):
         """Prints all words in wordlist.
@@ -140,7 +161,7 @@ class WordList:
         suggestions you desire to print to the console."""
 
         word_suggestions = []
-        number_of_suggestions = 5
+        number_of_suggestions = 10
         for i in range(number_of_suggestions):
             temp = self.choose_word()
             if not temp:
@@ -178,8 +199,9 @@ class WordList:
 
     # TODO: Combine these two functions into one, code duplication bad
     def add_to_included_list(self, letters):
+        ignored_chars = []
         for c in letters:
-            if c == '-':
+            if c == '-' or '+':
                 continue
             if c.isnumeric():
                 continue
@@ -191,6 +213,7 @@ class WordList:
         """Prints num of words, letters included, rejected, letters in pos,
         and suggestions."""
 
+        print("-------------------------------------")
         print("Number of words: " + str(len(self.word_list)))
         print(self.positions)
         print("Letters:\t", str(self.list_letters))

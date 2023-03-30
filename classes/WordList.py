@@ -49,25 +49,19 @@ class WordList:
         Output: alters instance member self.word_list"""
         for element in letters.split():
             if element[0] == '-':
-                # print(element[1:])
                 self.add_to_rejected_list(element)
                 self.word_list = self.return_only_excluding_letters(element[1:])
-
                 continue
 
             elif element[0].isnumeric():
-                # print("Numeric ", element)
                 self.assign_position(element[0], element[1])
                 self.add_to_included_list(element)
                 self.word_list = self.letter_in_pos(element[0], element[1])
-
                 continue
 
             else:
-                # print("Alpha ", element)
                 self.add_to_included_list(element)
                 self.word_list = self.return_only_including_letters(element)
-
                 continue
 
     def letter_in_pos(self, position, letter):
@@ -98,6 +92,7 @@ class WordList:
             if letters[0] in word:
                 new_words.append(word)
 
+        # recursive
         self.word_list = new_words
         return self.return_only_including_letters(letters[1:])
 
@@ -112,6 +107,7 @@ class WordList:
             if letters[0] not in word:
                 new_words.append(word)
 
+        # recursive
         self.word_list = new_words
         return self.return_only_excluding_letters(letters[1:])
 
@@ -129,6 +125,7 @@ class WordList:
         to be displayed before the next newline."""
         entries_per_line = 20
         new_line_counter = 0
+
         for word in self.word_list:
             print(word, end="\t")
             new_line_counter += 1
@@ -168,6 +165,7 @@ class WordList:
         """Assigns positional input characters to their corresponding position in list."""
         self.positions[int(position) - 1] = letters
 
+    # TODO: Combine these two functions into one, code duplication bad
     def add_to_rejected_list(self, letters):
         for c in letters:
             if c == '-':
@@ -178,6 +176,7 @@ class WordList:
                 continue
             self.list_rejected.append(c)
 
+    # TODO: Combine these two functions into one, code duplication bad
     def add_to_included_list(self, letters):
         for c in letters:
             if c == '-':
@@ -189,7 +188,8 @@ class WordList:
             self.list_letters.append(c)
 
     def print_stats(self):
-        # self.print_words()
+        """Prints num of words, letters included, rejected, letters in pos,
+        and suggestions."""
 
         print("Number of words: " + str(len(self.word_list)))
         print(self.positions)
@@ -197,33 +197,3 @@ class WordList:
         print("Rejected:\t", str(self.list_rejected))
         self.give_suggestions()
         print("-------------------------------------")
-
-    # def reset_state(self):
-    #     pass
-    #
-    # def save(self):
-    #     save_file = open("savefile.dat", 'w')
-    #
-    #     for pos in self.positions:
-    #         save_file.write(pos)
-    #         save_file.write(" ")
-    #
-    #     save_file.write('\n')
-    #
-    #     for letter in self.list_letters:
-    #         save_file.write(letter)
-    #         save_file.write(" ")
-    #
-    #     save_file.write('\n')
-    #
-    #     for letter in self.list_rejected:
-    #         save_file.write(letter)
-    #         save_file.write(" ")
-    #
-    #     save_file.write('\n')
-    #
-    #     self.word_list = fun.remove_newline(
-    #         fun.load_words(self.wordlist_file))
-    #
-    # def load(self):
-    #     pass

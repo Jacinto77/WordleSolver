@@ -37,11 +37,17 @@ class Program:
 
     @staticmethod
     def clear_states_dir():
+        """Deletes all state files from ~/states/."""
         files = glob.glob('states/program_state_*')
         for f in files:
             os.remove(f)
 
     def initial_prompt(self):
+        """Prompts for input from user.
+
+        Calls methods to run program commands,
+        Validates input"""
+
         while True:
             letters = input("Input letters to filter: \n"
                             "\\help for instructions\n"
@@ -57,24 +63,33 @@ class Program:
                 continue
 
     def is_command(self, letters):
+        """Returns a boolean for if the input letters are a built-in command.
+
+        Keyword arguments:
+        letters -- string of characters input by user"""
         if letters in self.commands:
             return True
         else:
             return False
 
     def run_command(self, letters):
+        """Uses letters input from user to call the specified command.
+
+        Keyword arguments:
+        letters -- string of characters input by user"""
+        # prints help text
         if letters in self.help_codes:
             self.print_help_text()
-
+        # reverts program to previous state
         elif letters in self.revert_codes:
             print("How many steps back do you want to take?")
             steps_back = input(f"Total Steps: {len(self.program_state_list)}\n>")
             self.load_state(int(steps_back))
-
+        # restarts program
         elif letters in self.restart_codes:
             self.will_continue = False
             self.clear_states_dir()
-
+        # quits program
         elif letters in self.quit_codes:
             self.clear_states_dir()
             quit(0)
@@ -84,12 +99,17 @@ class Program:
 
     @staticmethod
     def print_help_text():
+        """Prints help text."""
         print("(Syntax: -af excludes words with 'a' and 'f'; "
               "2a includes only words with an 'a' in the 2nd position; "
               "'df' includes all words with both 'd' and 'f')")
 
     @staticmethod
     def is_good_input(letters):
+        """Confirms input to user before continuing.
+
+        Keyword arguments:
+        letters -- string of characters input by user"""
         print("Input: ", letters, "\nContinue? (y/n) ENTER to skip\n>", end="")
         choice = input()
         if choice.lower() == 'n':
@@ -100,6 +120,7 @@ class Program:
     # TODO: add logic to not save state if no changes are made
     # TODO: should save_state and load_state be methods of WordList instead?
     def save_state(self):
+        """Saves state of the program to binary file in ../states"""
         new_state = self.wordlist
         with open(f'states/program_state_{new_state.obj_id}', 'wb') as f:
             pickle.dump(new_state, f, pickle.HIGHEST_PROTOCOL)

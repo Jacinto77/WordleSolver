@@ -25,4 +25,3 @@ while True:
 
         # filter wordlist based on input from user
         program.wordlist.filter_letters(letters)
-

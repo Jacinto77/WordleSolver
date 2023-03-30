@@ -56,6 +56,10 @@ class Program:
         Postcondition_2: program system commands are ran, user is re-prompted for
         input"""
 
+        # TODO: input should be validated such that inputting chars already filtered
+        #   will prompt a message. Input should reject non-alpha chars and all
+        #   special symbols except those currently used ('-' and '+')
+
         while True:
             letters = input("Input letters to filter: \n"
                             "\\help for detailed instructions\n"
@@ -67,7 +71,7 @@ class Program:
                             ">")
             if self.is_command(letters):
                 self.run_command(letters)
-                return self.initial_prompt()
+                # return self.initial_prompt()
 
             if self.is_good_input(letters):
                 return letters
@@ -100,17 +104,21 @@ class Program:
         # prints help text
         if letters in self.help_codes:
             self.print_help_text()
+
         elif letters in self.quick_help_codes:
             self.print_quick_help()
+
         # reverts program to previous state
         elif letters in self.revert_codes:
             print("How many steps back do you want to take?")
             steps_back = input(f"Total Steps: {len(self.program_state_list)}\n>")
             self.load_state(int(steps_back))
+
         # restarts program
         elif letters in self.restart_codes:
             self.will_continue = False
             self.clear_states_dir()
+
         # quits program
         elif letters in self.quit_codes:
             self.clear_states_dir()

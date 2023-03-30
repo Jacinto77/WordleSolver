@@ -51,22 +51,26 @@ class WordList:
         Input: string letters
         Output: alters instance member self.word_list"""
         for element in letters.split():
+            # TODO: determine_list() needs testing
+            self.determine_list(element)
             if element[0] == '-':           # exclude letters
-                self.add_to_rejected_list(element)
+                # self.determine_list(element)
                 self.word_list = self.return_only_excluding_letters(element[1:])
                 continue
 
             elif element[0].isnumeric():    # include letters in position
                 self.assign_position(element[0], element[1])
-                self.add_to_included_list(element)
+                # self.add_to_included_list(element)
                 self.word_list = self.letter_in_pos(element[0], element[1])
                 continue
 
             elif element[0] == '+':         # exclude letters in position
-                self.add_to_included_list(element)
+                # self.add_to_included_list(element)
                 self.word_list = self.exclude_positional_letter(element[1], element[2])
                 continue
 
+            # to be removed, superseded by the above elif
+            # might leave in for ease of use
             else:                           # include letters non-positionally
                 self.add_to_included_list(element)
                 self.word_list = self.return_only_including_letters(element)
@@ -85,9 +89,6 @@ class WordList:
 
         return words
 
-    # TODO: Can be made more specific by also specifying the position the letter
-    #   was in. ie if the letter Y was yellow in position 5, we can return
-    #   only words with a Y in it, but NOT in the Y position
     def return_only_including_letters(self, letters):
         """Returns wordlist containing all words including x."""
         if not letters:
@@ -118,7 +119,6 @@ class WordList:
         self.word_list = new_words
         return self.return_only_excluding_letters(letters[1:])
 
-    # TODO: implement
     def exclude_positional_letter(self, position, letters):
         """Alters the wordlist to only have words that contains the 'letter(s)'
         provided NOT in the 'position' provided
@@ -186,28 +186,42 @@ class WordList:
         """Assigns positional input characters to their corresponding position in list."""
         self.positions[int(position) - 1] = letters
 
-    # TODO: Combine these two functions into one, code duplication bad
-    def add_to_rejected_list(self, letters):
-        for c in letters:
-            if c == '-':
-                continue
-            if c.isnumeric():
-                continue
-            if c in self.list_rejected:
-                continue
-            self.list_rejected.append(c)
+    # def add_to_rejected_list(self, letters):
+    #     for c in letters:
+    #         if c == '-':
+    #             continue
+    #         if c.isnumeric():
+    #             continue
+    #         if c in self.list_rejected:
+    #             continue
+    #         self.list_rejected.append(c)
+    #
+    # def add_to_included_list(self, letters):
+    #     ignored_chars = ['-', '+']
+    #     for c in letters:
+    #         if c in ignored_chars or c in self.list_letters or c.isnumeric():
+    #             continue
+    #         self.list_letters.append(c)
 
-    # TODO: Combine these two functions into one, code duplication bad
-    def add_to_included_list(self, letters):
-        ignored_chars = []
+    def determine_list(self, letters):
+        """Determines which list to add chars to based on first char in letters."""
+        if letters[0] == '-':    # excluded letters
+            self.add_to_list(letters[1:], self.list_rejected)
+
+        elif letters[0] == '+':  # included letters NOT in position
+            self.add_to_list(letters[2:], self.list_letters)
+            # slice from index 2 to exclude + and number
+
+        elif letters[0].isnumeric():    # included letters IN position
+            self.add_to_list(letters[1:], self.list_letters)
+
+        else:
+            pass
+
+    # TODO: look into how to make this warning go away, or just ignore it?
+    def add_to_list(self, letters, list_letters):
         for c in letters:
-            if c == '-' or '+':
-                continue
-            if c.isnumeric():
-                continue
-            if c in self.list_letters:
-                continue
-            self.list_letters.append(c)
+            list_letters.append(c)
 
     def print_stats(self):
         """Prints num of words, letters included, rejected, letters in pos,

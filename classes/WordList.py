@@ -196,12 +196,13 @@ class WordList:
     #             continue
     #         self.list_rejected.append(c)
     #
-    # def add_to_included_list(self, letters):
-    #     ignored_chars = ['-', '+']
-    #     for c in letters:
-    #         if c in ignored_chars or c in self.list_letters or c.isnumeric():
-    #             continue
-    #         self.list_letters.append(c)
+    def add_to_included_list(self, letters):
+        """Adds letters to self.list_letters"""
+        ignored_chars = ['-', '+']
+        for c in letters:
+            if c in ignored_chars or c in self.list_letters or c.isnumeric():
+                continue
+            self.list_letters.append(c)
 
     def determine_list(self, letters):
         """Determines which list to add chars to based on first char in letters."""
@@ -218,7 +219,6 @@ class WordList:
         else:
             pass
 
-    # TODO: look into how to make this warning go away, or just ignore it?
     def add_to_list(self, letters, list_letters):
         for c in letters:
             list_letters.append(c)
